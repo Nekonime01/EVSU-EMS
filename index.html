@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to EEMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .background-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: 
+                linear-gradient(rgba(113, 0, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(113, 0, 0, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            transform: rotate(45deg);
+            animation: moveGrid 15s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: rotate(45deg) translate(-5%, -5%); }
+            100% { transform: rotate(45deg) translate(0%, 0%); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .button {
+            padding: 25px 50px;
+            font-size: 1.8rem;
+            color: #710000;
+            background: rgba(113, 0, 0, 0.1);
+            border: 2px solid rgba(113, 0, 0, 0.4);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+            box-shadow: 0 0 30px rgba(113, 0, 0, 0.1);
+        }
+
+        .button:hover {
+            background: rgba(113, 0, 0, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 
+                0 10px 30px rgba(113, 0, 0, 0.3),
+                0 0 50px rgba(113, 0, 0, 0.2);
+            border-color: #710000;
+            color: #ffffff;
+        }
+
+        .glow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at center, rgba(113, 0, 0, 0.8), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .button:hover .glow {
+            opacity: 0.2;
+        }
+
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: #710000;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
+            100% { transform: translateY(0px) scale(1); }
+        }
+
+        .container {
+            animation: float 6s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    <div class="particles"></div>
+    <div class="container">
+        <a href="index.php" class="button">
+            <span class="glow"></span>
+            Get Started
+        </a>
+    </div>
+
+    <script>
+        function createParticle(x, y) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            const size = Math.random() * 4 + 2;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            
+            document.querySelector('.particles').appendChild(particle);
+
+            const angle = Math.random() * Math.PI * 2;
+            const velocity = Math.random() * 100 + 50;
+            const tx = Math.cos(angle) * velocity;
+            const ty = Math.sin(angle) * velocity;
+
+            particle.animate([
+                { transform: 'translate(0, 0)', opacity: 1 },
+                { transform: `translate(${tx}px, ${ty}px)`, opacity: 0 }
+            ], {
+                duration: 1000,
+                easing: 'cubic-bezier(0, .9, .57, 1)',
+                fill: 'forwards'
+            });
+
+            setTimeout(() => particle.remove(), 1000);
+        }
+
+        document.querySelector('.button').addEventListener('click', function(e) {
+            e.preventDefault();
+            const rect = this.getBoundingClientRect();
+            
+            for(let i = 0; i < 20; i++) {
+                createParticle(
+                    rect.left + rect.width / 2,
+                    rect.top + rect.height / 2
+                );
+            }
+            
+            setTimeout(() => {
+                window.location.href = 'index.php';
+            }, 500);
+        });
+    </script>
+</body>
+</html>
